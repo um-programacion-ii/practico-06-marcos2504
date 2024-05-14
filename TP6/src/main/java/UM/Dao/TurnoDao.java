@@ -1,4 +1,5 @@
 package UM.Dao;
+import UM.Medico;
 import  UM.Turno;
 import java.util.*;
 
@@ -33,5 +34,13 @@ public class TurnoDao {
     public void agregarTurno(Turno turno) {
         String id = "T" + proximoId++; // Generar un nuevo ID único
         turnos.put(id, turno);
+        turno.setId(id);
+    }
+    public void listarTurnoss() {
+        System.out.println("Lista de Turnos:");
+        for (Turno turno : turnos.values()) {
+            System.out.println(" Medico: " + turno.getMedico().getNombre() +
+                    ", Paciente: " + turno.getPaciente().getNombre() + ", Con Obra social: " + turno.getPaciente().isConObraSocial() );
+        }
     }
 }

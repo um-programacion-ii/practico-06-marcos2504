@@ -1,22 +1,40 @@
 package UM;
-import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 
 public class Medico {
+    private String id;
     private String nombre;
     private String apellido;
     private Especialidad especialidad;
     private boolean disponible;
+    private int contadorTurnos;
+    private List<ObraSocial> obrasocial;
 
-    public Medico(String nombre, String apellido, Especialidad especialidad,Boolean disponible) {
+    public Medico(String nombre, String apellido, Especialidad especialidad, Boolean disponible) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.especialidad = especialidad;
-        this.disponible= true;
+        this.disponible = true;
+        this.obrasocial = new ArrayList<>();
 
 
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void incrementarContadorTurnos() {
+        contadorTurnos++;
+    }
+
+    public int getContadorTurnos() {
+        return contadorTurnos;
     }
 
     public String getNombre() {
@@ -42,23 +60,24 @@ public class Medico {
     public void setEspecialidad(Especialidad especialidad) {
         this.especialidad = especialidad;
     }
+
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
     }
+
     public boolean isDisponible() {
         return disponible;
     }
-    public Receta generarReceta() {
-        Random random = new Random();
-        if (random.nextBoolean()) { // Hay una probabilidad de generar una receta
-            int numMedicamentos = random.nextInt(3) + 1; // Generar un número aleatorio de medicamentos (entre 1 y 3)
-            List<Medicamento> medicamentos = new ArrayList<>();
-            for (int i = 0; i < numMedicamentos; i++) {
-                medicamentos.add(new Medicamento("Medicamento " + (i + 1)));
-            }
-            return new Receta(medicamentos);
-        } else {
-            return null; // No se genera una receta
-        }
+
+    public void agregarObraSocial(ObraSocial obra) {
+        obrasocial.add(obra);
     }
+    public List<String> getObrasocial() {
+        List<String> nombresObrasSociales = new ArrayList<>();
+        for (ObraSocial obraSocial : obrasocial) {
+            nombresObrasSociales.add(obraSocial.getNombre());
+        }
+        return nombresObrasSociales;
+    }
+
 }

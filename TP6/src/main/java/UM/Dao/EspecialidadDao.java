@@ -4,8 +4,17 @@ import UM.Especialidad;
 
 
 public class EspecialidadDao {
+    private static EspecialidadDao instance;
     private Map<String, Especialidad> especialidades = new HashMap<>();
     private int proximoId = 1;
+    private EspecialidadDao() {}
+
+    public static synchronized EspecialidadDao getInstance() {
+        if (instance == null) {
+            instance = new EspecialidadDao();
+        }
+        return instance;
+    }
 
 
     public void eliminarEspecialidad(String id) {
@@ -20,5 +29,7 @@ public class EspecialidadDao {
     }
     public void agregar(Especialidad especialidad) {
         String id = "E" + proximoId++; // Generar un nuevo ID único
-        especialidades.put(id, especialidad);}
+        especialidades.put(id, especialidad);
+        especialidad.setId(id);
+    }
 }

@@ -7,15 +7,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ObraSocialDao { private Map<String, ObraSocial> obrasocials = new HashMap<>();
+public class ObraSocialDao {
+    private static ObraSocialDao instance;
+    private Map<String, ObraSocial> obrasocials = new HashMap<>();
     private int proximoId = 1;
+    private ObraSocialDao() {}
+    public static synchronized ObraSocialDao getInstance() {
+        if (instance == null) {
+            instance = new ObraSocialDao();
+        }
+        return instance;
+    }
+
 
     public void agregar(String id, ObraSocial obraSocial) {
         obrasocials.put(id, obraSocial);
     }
 
     public void eliminar(String id) {
-        obrasocials.remove(id);
+obrasocials.remove(id);
     }
 
     public ObraSocial buscar(String id) {

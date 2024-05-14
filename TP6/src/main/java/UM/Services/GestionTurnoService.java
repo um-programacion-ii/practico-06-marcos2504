@@ -30,31 +30,59 @@ public class GestionTurnoService {
     }
 
 
-
     public void solicitarTurno(Paciente paciente, Especialidad especialidad) {
-        // Obtener un mapa de todos los médicos junto con sus IDs
-        Map<String, Medico> medicosConIds = medicoDao.listarMedicosConIds();
+        // Obtener una lista de todos los médicos disponibles
+        if (paciente.isConObraSocial()) {
+            List<Medico> medicosObraSocial = medicoDao.listarMedicosObraSocial();
+            boolean turnoAsignado = false;
+            // Iterar sobre la lista y buscar un médico con la especialidad deseada
+            for (Medico medico : medicosObraSocial) {
+                if (medico.getEspecialidad().equals(especialidad) &&  medico.getObrasocial().contains(paciente.getObraSocial())) {
+                    medicoDao.incrementarContadorTurnos(medico.getId());
 
-        // Iterar sobre el mapa y buscar un médico disponible con la especialidad deseada
-        for (Map.Entry<String, Medico> entry : medicosConIds.entrySet()) {
-            String id = entry.getKey();
-            Medico medico = entry.getValue();
+                    // Crear un nuevo turno con el paciente y el médico
+                    Turno turno = new Turno(paciente, medico, paciente.isConObraSocial());
 
-            if (medico.getEspecialidad().equals(especialidad) && medico.isDisponible()) {
-                medicoDao.actualizarDisponibilidadMedico(id, false);
-                Turno turno = new Turno(paciente,medico);
-                turnoDao.agregarTurno(turno);
-                // Aquí puedes usar el ID del médico para realizar otras operaciones, como iniciar un turno, etc.
-                System.out.println("Turno solicitado con éxito para el paciente " + paciente.getNombre() +
-                        ". Médico asignado: " + medico.getNombre() + ". ID del médico: " + id);
-                return;
+                    // Agregar el turno a la base de datos
+                    turnoDao.agregarTurno(turno);
+
+                    // Imprimir el mensaje de éxito con el nombre del paciente y médico asignado
+                    System.out.println("Turno solicitado con éxito para el paciente " + paciente.getNombre() +
+                            ". Médico asignado: " + medico.getNombre());
+                    turnoAsignado = true;
+                    break; // Salir del bucle una vez que se haya asignado el turno
+                }
+            }
+            if (!turnoAsignado) {
+                System.out.println("Lo sentimos, no hay médicos disponibles para la especialidad que reciban esa obra social " +
+                        especialidad.getNombre() + " ");
             }
         }
+        else {
+            List<Medico> medicosObraSocial = medicoDao.listarMedicos();
+            boolean turnoAsignado = false;
+            // Iterar sobre la lista y buscar un médico con la especialidad deseada
+            for (Medico medico : medicosObraSocial) {
+                if (medico.getEspecialidad().equals(especialidad)) {
+                    medicoDao.incrementarContadorTurnos(medico.getId());
 
-        System.out.println("Lo sentimos, no hay médicos disponibles para la especialidad " +
-                especialidad.getNombre() + " en este momento.");
+                    // Crear un nuevo turno con el paciente y el médico
+                    Turno turno = new Turno(paciente, medico, paciente.isConObraSocial());
+
+                    // Agregar el turno a la base de datos
+                    turnoDao.agregarTurno(turno);
+
+                    // Imprimir el mensaje de éxito con el nombre del paciente y médico asignado
+                    System.out.println("Turno solicitado con éxito para el paciente " + paciente.getNombre() +
+                            ". Médico asignado: " + medico.getNombre());
+                    turnoAsignado = true;
+                    break; // Salir del bucle una vez que se haya asignado el turno
+                }
+            }
+            if (!turnoAsignado) {
+                System.out.println("Lo sentimos, no hay médicos disponibles para la especialidad  " +
+                        especialidad.getNombre() + " ");
+            }
+        }
     }
-
-
 }
-

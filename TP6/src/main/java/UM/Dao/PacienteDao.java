@@ -3,8 +3,16 @@ import UM.Paciente;
 import java.util.*;
 
 public class PacienteDao {
+    private static PacienteDao instance;
     private Map<String, Paciente> pacientes = new HashMap<>();
     private int proximoId = 1;
+    private PacienteDao() {}
+    public static synchronized PacienteDao getInstance() {
+        if (instance == null) {
+            instance = new PacienteDao();
+        }
+        return instance;
+    }
 
 
 
@@ -23,5 +31,6 @@ public class PacienteDao {
     public void agregarPaciente(Paciente paciente) {
         String id = "P" + proximoId++; // Generar un nuevo ID único
         pacientes.put(id, paciente);
+        paciente.setId(id);
     }
 }
