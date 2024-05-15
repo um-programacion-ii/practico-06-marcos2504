@@ -11,7 +11,7 @@ public class Medico {
     private int contadorTurnos;
     private List<ObraSocial> obrasocial;
 
-    public Medico(String nombre, String apellido, Especialidad especialidad, Boolean disponible) {
+    public Medico(String nombre, String apellido, Especialidad especialidad) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.especialidad = especialidad;
@@ -31,6 +31,9 @@ public class Medico {
 
     public void incrementarContadorTurnos() {
         contadorTurnos++;
+    }
+    public void decrementarContadorTurnos() {
+        contadorTurnos--;
     }
 
     public int getContadorTurnos() {

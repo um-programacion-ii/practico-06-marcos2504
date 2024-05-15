@@ -40,7 +40,36 @@ public class TurnoDao {
         System.out.println("Lista de Turnos:");
         for (Turno turno : turnos.values()) {
             System.out.println(" Medico: " + turno.getMedico().getNombre() +
-                    ", Paciente: " + turno.getPaciente().getNombre() + ", Con Obra social: " + turno.getPaciente().isConObraSocial() );
+                    ", Paciente: " + turno.getPaciente().getNombre() + ", Con Obra social: " + turno.getPaciente().isConObraSocial() + ", Estado: "+ turno.getEstado() );
         }
+    }
+    public List<Turno> ObtenerTurnosPendientes(){
+        List<Turno> turnosPendientes = new ArrayList<>();
+        for (Turno turno: turnos.values()){
+            if (turno.getEstado().equalsIgnoreCase("Pendiente")){
+                turnosPendientes.add(turno);
+            }
+        }
+        return turnosPendientes;
+
+    }
+    public void actualizarEstado (String id,String estado ){
+        Turno turno = turnos.get(id);
+        if (turno != null) {
+            turno.setEstado(estado);
+            turnos.put(id, turno);
+        } else {
+            System.out.println("No se encontró el médico con ID: " + id);
+        }
+    }
+    public List<Turno> ObtenerTurnosEnCurso(){
+        List<Turno> turnosEnCurso = new ArrayList<>();
+        for (Turno turno: turnos.values()){
+            if (turno.getEstado().equals("En Curso")){
+                turnosEnCurso.add(turno);
+            }
+        }
+        return turnosEnCurso;
+
     }
 }

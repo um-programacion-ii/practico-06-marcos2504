@@ -41,7 +41,7 @@ public class MedicoDao {
 
             System.out.println(" Nombre: " + medico.getNombre() +
                     ", Apellido: " + medico.getApellido() + ", Especialidad: " + medico.getEspecialidad().getNombre() +
-                    " , Turnos" + medico.getContadorTurnos());
+                    " , Turnos" + medico.getContadorTurnos()+ "Disponible: "+ medico.isDisponible());
         }
         return listaMedicos;
     }
@@ -80,6 +80,14 @@ public class MedicoDao {
             } else {
                 System.out.println("No se encontró el médico con ID: " + idMedico);
             }
+        }
+        public void decrementarContadorTurnos (String idMedico){
+        Medico medico = medicos.get(idMedico);
+        if (medico != null) {
+            medico.decrementarContadorTurnos();
+        } else {
+            System.out.println("No se encontró el médico con ID: " + idMedico);
+        }
         }
         public void actualizarDisponibilidadMedico (String id,boolean disponible){
             Medico medico = medicos.get(id);

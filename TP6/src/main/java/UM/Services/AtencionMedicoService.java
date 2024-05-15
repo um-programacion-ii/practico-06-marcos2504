@@ -1,25 +1,34 @@
 package UM.Services;
 
 import java.util.Random;
+
+import UM.*;
 import UM.Dao.MedicoDao;
-import UM.Medico;
-import UM.Medicamento;
+import UM.Dao.PacienteDao;
+import UM.Dao.TurnoDao;
+
 import java.util.List;
 import java.util.ArrayList;
-import UM.Receta;
+
 import UM.Dao.RecetaDao;
+
 public class AtencionMedicoService {
     private static AtencionMedicoService instance;
     private MedicoDao medicoDao;
     private RecetaDao recetaDao;
+    private PacienteDao pacienteDao;
+    private final TurnoDao turnoDao;
 
-    private AtencionMedicoService(MedicoDao medicoDao) {
+    private AtencionMedicoService(MedicoDao medicoDao, TurnoDao turnoDao,PacienteDao pacienteDao,RecetaDao recetaDao) {
         this.medicoDao = medicoDao;
+        this.turnoDao = turnoDao;
+        this.pacienteDao=pacienteDao;
+        this.recetaDao=recetaDao;
     }
 
-    public static synchronized AtencionMedicoService getInstance(MedicoDao medicoDao) {
+    public static synchronized AtencionMedicoService getInstance(MedicoDao medicoDao, TurnoDao turnoDao,PacienteDao pacienteDao,RecetaDao recetaDao) {
         if (instance == null) {
-            instance = new AtencionMedicoService(medicoDao);
+            instance = new AtencionMedicoService(medicoDao,turnoDao,pacienteDao,recetaDao);
         }
         return instance;
     }
@@ -34,10 +43,41 @@ public class AtencionMedicoService {
         MEDICAMENTOS_DISPONIBLES.add(new Medicamento("Loratadina"));
     }
 
-    public void empezarTurno() {
 
-    }
 
+    public void EmpezarTurnos() {
+            List<Turno> turnosPendientes = turnoDao.ObtenerTurnosPendientes();
+            for (Turno turno : turnosPendientes) {
+                // Verificar si el médico asociado al turno está disponible
+                Medico medico = turno.getMedico();
+                Paciente paciente = turno.getPaciente();
+                if (medico.isDisponible() && paciente.isDisponible()) {
+                    medicoDao.actualizarDisponibilidadMedico(medico.getId(), false);
+                    pacienteDao.actualizarDisponible(paciente.getId(), false);
+                    turnoDao.actualizarEstado(turno.getId(), "En Curso");
+                    medicoDao.decrementarContadorTurnos(medico.getId());
+                }
+            }
+
+        }
+
+    public void FinalizarTurnos() {
+
+            List<Turno> turnosEnCurso = turnoDao.ObtenerTurnosEnCurso();
+            for (Turno turno : turnosEnCurso) {
+                // Verificar si el médico asociado al turno está disponible
+                Medico medico = turno.getMedico();
+                Paciente paciente = turno.getPaciente();
+                medicoDao.actualizarDisponibilidadMedico(medico.getId(), true);
+                pacienteDao.actualizarDisponible(paciente.getId(), true);
+                turnoDao.actualizarEstado(turno.getId(), "Finalizado");
+                Receta receta= generarReceta();
+                recetaDao.agregarPaciente(receta.getId(),paciente);
+                pacienteDao.agregarReceta(paciente.getId(), receta);
+
+            }
+
+        }
 
 
     public Receta generarReceta() {
@@ -65,6 +105,7 @@ public class AtencionMedicoService {
             receta.agregarMedicamento(medicamento, cantidad);
         }
         recetaDao.agregarReceta(receta);
+
 
         return receta;
     }

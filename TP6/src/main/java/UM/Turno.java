@@ -4,7 +4,7 @@ public class Turno {
     private String id;
     private Paciente paciente;
     private Medico medico;
-    private boolean finalizado;
+    private String estado;
     private boolean conObraSocial;
 
     // Constructor
@@ -12,7 +12,7 @@ public class Turno {
         this.paciente = paciente;
         this.medico = medico;
         this.conObraSocial= conObraSocial;
-        this.finalizado= false;
+        this.estado="Pendiente";
 
     }
 
@@ -41,8 +41,12 @@ public class Turno {
         return id;
     }
 
-    public void setFinalizado(boolean finalizado) {
-        this.finalizado = finalizado;
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }
 
