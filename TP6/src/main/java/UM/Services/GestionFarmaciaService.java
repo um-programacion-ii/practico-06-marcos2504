@@ -33,7 +33,7 @@ public class GestionFarmaciaService {
         List<Receta> recetasPendientes = recetaDao.ObtenerRecetasPendientes();
         for (Receta receta : recetasPendientes) {
             Paciente paciente = receta.getPaciente();
-            if (paciente.isDisponible()) {
+           if (paciente.isDisponible()) {
                 // Cambiar el estado del paciente a no disponible
                 pacienteDao.actualizarDisponible(paciente.getId(), false);
                 // Cambiar el estado de la receta a en curso
