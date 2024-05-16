@@ -35,6 +35,8 @@ obrasocials.remove(id);
         return new ArrayList<>(obrasocials.values());
     }
     public void agregar(ObraSocial obraSocial) {
-        String id = "M" + proximoId++; // Generar un nuevo ID único
-        obrasocials.put(id, obraSocial);}
+        String id = "O" + proximoId++; // Generar un nuevo ID único
+        obrasocials.put(id, obraSocial);
+        obraSocial.setId(id);
+    }
 }

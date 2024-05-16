@@ -1,5 +1,6 @@
 package UM.Services;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import UM.Dao.PacienteDao;
 import UM.Dao.RecetaDao;
@@ -16,6 +17,7 @@ public class GestionFarmaciaService {
     private Map<Medicamento, Integer> inventario;
 
     private GestionFarmaciaService() {
+        this.inventario =  new HashMap<>();
         this.pacienteDao = PacienteDao.getInstance();
         this.recetaDao=RecetaDao.getInstance();
     }
